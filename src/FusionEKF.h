@@ -38,12 +38,21 @@ class FusionEKF {
   // previous timestamp
   long long previous_timestamp_;
 
+  // process noise parameters
+  int sigma_ax_;
+  int sigma_ay_;
+
   // tool object used to compute Jacobian and RMSE
   Tools tools;
+  // Matrices for Kalman filter equations
   Eigen::MatrixXd R_laser_;
   Eigen::MatrixXd R_radar_;
   Eigen::MatrixXd H_laser_;
   Eigen::MatrixXd Hj_;
+  Eigen::MatrixXd Q_;
+
+  void calculateStateTransitionF(long long deltaT);
+  void calculateProcessNoiseQ(long long deltaT);
 };
 
 #endif // FusionEKF_H_

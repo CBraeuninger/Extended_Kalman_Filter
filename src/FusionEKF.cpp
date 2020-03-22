@@ -17,11 +17,17 @@ FusionEKF::FusionEKF() {
 
   previous_timestamp_ = 0;
 
+  // process noise parameters
+  int sigma_ax_ = 9;
+  int sigma_ay_ = 9;
+
   // initializing matrices
-  R_laser_ = MatrixXd(2, 2);
-  R_radar_ = MatrixXd(3, 3);
-  H_laser_ = MatrixXd(2, 4);
-  Hj_ = MatrixXd(3, 4);
+  R_laser_ = MatrixXd(2, 2); //measurement covariance matrix (laser) : describing uncertainity of sensor measurement
+  R_radar_ = MatrixXd(3, 3); //measurement covariance matrix (radar): describing uncertainity of sensor measurement
+  H_laser_ = MatrixXd(2, 4); // H projects our belief of the object's current state into the measurement state of the sensor
+  Hj_ = MatrixXd(3, 4); // for radar we need the Jacobian of the measurement function, since it is non-linear
+  
+  Q_ = MatrixXd(4,4); // process noise
 
   //measurement covariance matrix - laser
   R_laser_ << 0.0225, 0,
@@ -32,11 +38,11 @@ FusionEKF::FusionEKF() {
               0, 0.0009, 0,
               0, 0, 0.09;
 
-  /**
-   * TODO: Finish initializing the FusionEKF.
-   * TODO: Set the process and measurement noises
-   */
+  // Lidar measures only the position (px, py) of the object
+  H_laser_ << 1, 0, 0, 0,
+              0, 1, 0, 0;
 
+  // Hj will be initialized with first sensor measurement
 
 }
 
@@ -110,4 +116,15 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   // print the output
   cout << "x_ = " << ekf_.x_ << endl;
   cout << "P_ = " << ekf_.P_ << endl;
+}
+
+
+
+void FusionEKF::calculateProcessNoiseQ(long long deltaT){
+
+  Q_ << 0.25 * pow(sigma_ax_, 2) * pow(deltaT, 4), 0, 0.5 * pow(sigma_ax_, 2) * pow(deltaT, 3), 0,
+        0, 0.25 * pow(sigma_ay_, 2) * pow(deltaT, 2), 0, 0.5 * pow(sigma_ay_, 2) * pow(deltaT, 3),
+        0.5 * pow(sigma_ax_, 2) * pow(deltaT,3), 0, pow(sigma_ax_, 2) * pow(deltaT, 2), 0,
+        0, 0.5 * pow(sigma_ay_,2) * pow(deltaT, 3), 0, pow(sigma_ay_,2) * pow(deltaT, 2);
+
 }
