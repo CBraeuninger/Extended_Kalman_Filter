@@ -9,7 +9,7 @@ class StateTransition{
         StateTransition();
         virtual ~StateTransition();
 
-        Eigen::MatrixXd F_; // state transition matrix
+        Eigen::MatrixXd matrix_; // state transition matrix
 
         void update(long long deltaT);
 

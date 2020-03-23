@@ -13,7 +13,7 @@ class ProcessNoise{
 
         int sigma_ax_;
         int sigma_ay_;
-        Eigen::VectorXd Q_;
+        Eigen::MatrixXd matrix_;
 
         void ProcessNoise::update(long long deltaT);
 

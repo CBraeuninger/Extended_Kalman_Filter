@@ -8,6 +8,9 @@
 #include "kalman_filter.h"
 #include "measurement_package.h"
 #include "tools.h"
+#include "ProcessNoise.h"
+#include "StateTransition.h"
+#include "JacobianH.h"
 
 class FusionEKF {
  public:
@@ -48,11 +51,12 @@ class FusionEKF {
   Eigen::MatrixXd R_laser_;
   Eigen::MatrixXd R_radar_;
   Eigen::MatrixXd H_laser_;
-  Eigen::MatrixXd Hj_;
-  Eigen::MatrixXd Q_;
+  JacobianH Hj_;
+  ProcessNoise Q_;
+  Eigen::MatrixXd R_;
+  StateTransition T_;
+  Eigen::MatrixXd P_;
 
-  void calculateStateTransitionF(long long deltaT);
-  void calculateProcessNoiseQ(long long deltaT);
 };
 
 #endif // FusionEKF_H_

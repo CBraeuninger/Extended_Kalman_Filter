@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Eigen/Dense"
 #include "tools.h"
+#include <math.h>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -17,17 +18,11 @@ FusionEKF::FusionEKF() {
 
   previous_timestamp_ = 0;
 
-  // process noise parameters
-  int sigma_ax_ = 9;
-  int sigma_ay_ = 9;
-
   // initializing matrices
   R_laser_ = MatrixXd(2, 2); //measurement covariance matrix (laser) : describing uncertainity of sensor measurement
   R_radar_ = MatrixXd(3, 3); //measurement covariance matrix (radar): describing uncertainity of sensor measurement
   H_laser_ = MatrixXd(2, 4); // H projects our belief of the object's current state into the measurement state of the sensor
-  Hj_ = MatrixXd(3, 4); // for radar we need the Jacobian of the measurement function, since it is non-linear
-  
-  Q_ = MatrixXd(4,4); // process noise
+  P_ = MatrixXd(4,4); // uncertainity of where we are
 
   //measurement covariance matrix - laser
   R_laser_ << 0.0225, 0,
@@ -41,6 +36,12 @@ FusionEKF::FusionEKF() {
   // Lidar measures only the position (px, py) of the object
   H_laser_ << 1, 0, 0, 0,
               0, 1, 0, 0;
+
+  // uncertainity of where we are
+  P_ << 1000, 0, 0, 0,
+        0, 1000, 0, 0,
+        0, 0, 1000, 0,
+        0, 0, 0, 1000;
 
   // Hj will be initialized with first sensor measurement
 
@@ -56,20 +57,18 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    * Initialization
    */
   if (!is_initialized_) {
-    /**
-     * TODO: Initialize the state ekf_.x_ with the first measurement.
-     * TODO: Create the covariance matrix.
-     * You'll need to convert radar from polar to cartesian coordinates.
-     */
 
+    // Initialize the state ekf_.x_ with the first measurement
+    
     // first measurement
     cout << "EKF: " << endl;
     ekf_.x_ = VectorXd(4);
     ekf_.x_ << 1, 1, 1, 1;
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-      // TODO: Convert radar from polar to cartesian coordinates 
-      //         and initialize state.
+      // Convert radar from polar to cartesian coordinates 
+      // and initialize state.
+      ekf_.calculate_h_of_x();
 
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
@@ -116,15 +115,4 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   // print the output
   cout << "x_ = " << ekf_.x_ << endl;
   cout << "P_ = " << ekf_.P_ << endl;
-}
-
-
-
-void FusionEKF::calculateProcessNoiseQ(long long deltaT){
-
-  Q_ << 0.25 * pow(sigma_ax_, 2) * pow(deltaT, 4), 0, 0.5 * pow(sigma_ax_, 2) * pow(deltaT, 3), 0,
-        0, 0.25 * pow(sigma_ay_, 2) * pow(deltaT, 2), 0, 0.5 * pow(sigma_ay_, 2) * pow(deltaT, 3),
-        0.5 * pow(sigma_ax_, 2) * pow(deltaT,3), 0, pow(sigma_ax_, 2) * pow(deltaT, 2), 0,
-        0, 0.5 * pow(sigma_ay_,2) * pow(deltaT, 3), 0, pow(sigma_ay_,2) * pow(deltaT, 2);
-
 }

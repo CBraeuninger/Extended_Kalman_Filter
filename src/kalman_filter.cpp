@@ -1,4 +1,5 @@
 #include "kalman_filter.h"
+#include <math.h>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -15,6 +16,7 @@ KalmanFilter::~KalmanFilter() {}
 void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
                         MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in) {
   x_ = x_in;
+  h_ = h_in;
   P_ = P_in;
   F_ = F_in;
   H_ = H_in;
@@ -38,4 +40,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
    * TODO: update the state by using Extended Kalman Filter equations
    */
+}
+
+void KalmanFilter::calculate_h_of_x(){
+
+  h_ << sqrt(pow(x_(0),2)+pow(x_(1),2)), atan2(x_(1), x_(0)), (x_(0)*x_(2)+x_(1)*x_(3))/sqrt(pow(x_(0),2)+pow(x_(1),2));
+
 }

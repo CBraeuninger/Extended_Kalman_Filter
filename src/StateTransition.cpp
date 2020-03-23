@@ -2,11 +2,10 @@
 #include "Eigen/Dense"
 
 using Eigen::MatrixXd;
-using Eigen::VectorXd;
 
 StateTransition::StateTransition(){
-    F_ = MatrixXd(4,4);
-    F_ <<   1, 0, 0, 0,
+    matrix_ = MatrixXd(4,4);
+    matrix_ <<   1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1;
@@ -14,7 +13,7 @@ StateTransition::StateTransition(){
 
 void StateTransition::update(long long deltaT){
 
-  F_ << 1, 0, deltaT, 0,
+  matrix_ << 1, 0, deltaT, 0,
         0, 1, 0, deltaT,
         0, 0, 1, 0,
         0, 0, 0, 1;

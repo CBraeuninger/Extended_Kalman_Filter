@@ -15,6 +15,9 @@ class KalmanFilter {
    */
   virtual ~KalmanFilter();
 
+  Eigen::VectorXd x_;
+  Eigen::VectorXd h_;
+
   /**
    * Init Initializes Kalman filter
    * @param x_in Initial state
@@ -46,23 +49,9 @@ class KalmanFilter {
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
-  // state vector
-  Eigen::VectorXd x_;
+  void calculate_h_of_x();
 
-  // state covariance matrix
-  Eigen::MatrixXd P_;
 
-  // state transition matrix
-  Eigen::MatrixXd F_;
-
-  // process covariance matrix
-  Eigen::MatrixXd Q_;
-
-  // measurement matrix
-  Eigen::MatrixXd H_;
-
-  // measurement covariance matrix
-  Eigen::MatrixXd R_;
 };
 
 #endif // KALMAN_FILTER_H_
