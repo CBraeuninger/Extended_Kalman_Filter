@@ -3,7 +3,7 @@
 
 #include "Eigen/Dense"
 
-class JacobianH{
+class JacobianH : public Eigen::MatrixXd{
 
     public:
 

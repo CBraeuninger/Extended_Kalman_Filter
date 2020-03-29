@@ -53,8 +53,7 @@ class FusionEKF {
   Eigen::MatrixXd H_laser_;
   JacobianH Hj_;
   ProcessNoise Q_;
-  Eigen::MatrixXd R_;
-  StateTransition T_;
+  StateTransition F_;
   Eigen::MatrixXd P_;
 
 };

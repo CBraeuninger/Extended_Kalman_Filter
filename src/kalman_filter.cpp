@@ -1,5 +1,7 @@
 #include "kalman_filter.h"
 #include <math.h>
+#include "StateTransition.h"
+#include "ProcessNoise.h"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -13,10 +15,10 @@ KalmanFilter::KalmanFilter() {}
 
 KalmanFilter::~KalmanFilter() {}
 
-void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
-                        MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in) {
+void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, StateTransition &F_in,
+                        MatrixXd &H_in, MatrixXd &R_in, ProcessNoise &Q_in) {
   x_ = x_in;
-  h_ = h_in;
+  calculate_h_of_x();
   P_ = P_in;
   F_ = F_in;
   H_ = H_in;
@@ -28,6 +30,9 @@ void KalmanFilter::Predict() {
   /**
    * TODO: predict the state
    */
+
+  
+
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
