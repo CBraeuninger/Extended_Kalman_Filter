@@ -3,16 +3,23 @@
 
 #include "Eigen/Dense"
 
-class JacobianH : public Eigen::MatrixXd{
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
+
+class JacobianH : public MatrixXd{
 
     public:
 
         JacobianH();
         ~JacobianH();
 
-        Eigen::MatrixXd matrix_;
+        MatrixXd matrix_;
 
         void JacobianH::update(const VectorXd& x_state);
+
+        MatrixXd operator * (MatrixXd other){
+            return matrix_  * other;
+        };
 
 };
 

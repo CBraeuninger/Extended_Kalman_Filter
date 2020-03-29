@@ -3,15 +3,21 @@
 
 #include "Eigen/Dense"
 
-class StateTransition{
+using Eigen::MatrixXd;
+
+class StateTransition : public MatrixXd{
     public:
         /* Constructor and destructor */
         StateTransition();
         virtual ~StateTransition();
 
-        Eigen::MatrixXd matrix_; // state transition matrix
+        MatrixXd matrix_; // state transition matrix
 
         void update(long long deltaT);
+
+        MatrixXd operator * (MatrixXd other){
+            return matrix_ * other;
+        };
 
 };
 

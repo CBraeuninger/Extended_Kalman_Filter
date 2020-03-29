@@ -3,6 +3,8 @@
 
 #include "Eigen/Dense"
 
+using Eigen::MatrixXd;
+
 class ProcessNoise{
 
     public:
@@ -13,9 +15,13 @@ class ProcessNoise{
 
         int sigma_ax_;
         int sigma_ay_;
-        Eigen::MatrixXd matrix_;
+        MatrixXd matrix_;
 
         void ProcessNoise::update(long long deltaT);
+
+        MatrixXd operator * (MatrixXd other){
+            return matrix_ * other;
+        };        
 
 };
 
