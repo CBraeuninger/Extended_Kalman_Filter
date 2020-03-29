@@ -19,6 +19,10 @@ class StateTransition : public MatrixXd{
             return matrix_ * other;
         };
 
+        MatrixXd transpose (){
+            return matrix_.transpose();
+        };
+
 };
 
 #endif // STATETRANSITION_H_

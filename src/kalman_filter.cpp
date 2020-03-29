@@ -18,7 +18,6 @@ KalmanFilter::~KalmanFilter() {}
 void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, StateTransition &F_in,
                         MatrixXd &H_in, MatrixXd &R_in, ProcessNoise &Q_in) {
   x_ = x_in;
-  calculate_h_of_x();
   P_ = P_in;
   F_ = F_in;
   H_ = H_in;
@@ -30,9 +29,12 @@ void KalmanFilter::Predict() {
   /**
    * TODO: predict the state
    */
-
-  
-
+  // Update x (in Cartesian coordinates)
+  x_ = F_ * x_;
+  // calculate state in polar coordinates
+  calculate_h_of_x();
+  // Calculate new state covariance matrix
+  P_ = Q_ + F_ * P_ * F_.transpose();
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
