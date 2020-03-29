@@ -2,6 +2,7 @@
 #define KALMAN_FILTER_H_
 
 #include "Eigen/Dense"
+#include "JacobianH.h"
 
 class KalmanFilter {
  public:
@@ -21,18 +22,20 @@ class KalmanFilter {
    * @param P_in Initial state covariance
    * @param F_in Transition matrix
    * @param H_in Measurement matrix
+   * @param Hj_ Jacobian of measurement matrix
    * @param R_in Measurement covariance matrix
    * @param Q_in Process covariance matrix
    */
   void Init(Eigen::VectorXd &x_in, Eigen::MatrixXd &P_in, StateTransition &F_in,
-            Eigen::MatrixXd &H_in, Eigen::MatrixXd &R_in, ProcessNoise &Q_in);
+            Eigen::MatrixXd &H_in, JacobianH &Hj_in, Eigen::MatrixXd &R_radar_in,
+            Eigen::MatrixXd &R_laser_in, ProcessNoise &Q_in);
 
   /**
    * Prediction Predicts the state and the state covariance
    * using the process model
-   * @param delta_T Time between k and k+1 in s
+   * @param deltaT Time between k and k+1 in s
    */
-  void Predict();
+  void Predict(long long deltaT);
 
   /**
    * Updates the state by using standard Kalman Filter equations
@@ -46,13 +49,10 @@ class KalmanFilter {
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
-  void calculate_h_of_x();
+  Eigen::VectorXd calculate_h_of_x();
 
   // state vector
   Eigen::VectorXd x_;
-
-  // measurement vector
-  Eigen::VectorXd h_;
 
   // state covariance matrix
   Eigen::MatrixXd P_;
@@ -66,8 +66,14 @@ class KalmanFilter {
   // measurement matrix
   Eigen::MatrixXd H_;
 
-  // measurement covariance matrix
-  Eigen::MatrixXd R_;
+  // Jacobian of measurment matrix
+  JacobianH Hj_;
+
+  // measurement covariance matrix (radar)
+  Eigen::MatrixXd R_radar_;
+
+  // measurement covariance matrix (laser)
+  Eigen::MatrixXd R_laser_;
 
 };
 

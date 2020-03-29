@@ -21,7 +21,7 @@ FusionEKF::FusionEKF() {
   // initializing matrices
   R_laser_ = MatrixXd(2, 2); //measurement covariance matrix (laser) : describing uncertainity of sensor measurement
   R_radar_ = MatrixXd(3, 3); //measurement covariance matrix (radar): describing uncertainity of sensor measurement
-  H_laser_ = MatrixXd(2, 4); // H projects our belief of the object's current state into the measurement state of the sensor
+  H_ = MatrixXd(2, 4); // H projects our belief of the object's current state into the measurement state of the sensor
   P_ = MatrixXd(4,4); // uncertainity of where we are
   Q_ = ProcessNoise();
   F_ = StateTransition();
@@ -36,7 +36,7 @@ FusionEKF::FusionEKF() {
               0, 0, 0.09;
 
   // Lidar measures only the position (px, py) of the object
-  H_laser_ << 1, 0, 0, 0,
+  H_ << 1, 0, 0, 0,
               0, 1, 0, 0;
 
   // uncertainity of where we are
@@ -68,15 +68,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     ekf_.x_ = VectorXd(4);
     ekf_.x_ << 1, 1, 1, 1;
 
-    if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-      // calculate Jacobian
-      Hj_.update(ekf_.x_);
-      // initialize Kalman filter
-      ekf_.Init(ekf_.x_, P_, F_, Hj_, R_radar_, Q_);      
-    }
-    else if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR){
-      ekf_.Init(ekf_.x_, P_, F_, H_laser_, R_laser_, Q_);
-    }
+    // calculate Jacobian
+    Hj_.update(ekf_.x_);
+    // initialize Kalman filter
+    ekf_.Init(ekf_.x_, P_, F_, H_, Hj_, R_radar_, R_laser_, Q_);      
+
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
@@ -94,14 +90,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
 
-  ekf_.Predict();
+  ekf_.Predict(measurement_pack.timestamp_ - previous_timestamp_);
 
   /**
    * Update
    */
 
   /**
-   * TODO:
    * - Use the sensor type to perform the update step.
    * - Update the state and covariance matrices.
    */

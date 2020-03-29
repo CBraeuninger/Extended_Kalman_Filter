@@ -50,7 +50,7 @@ class FusionEKF {
   // Matrices for Kalman filter equations
   Eigen::MatrixXd R_laser_;
   Eigen::MatrixXd R_radar_;
-  Eigen::MatrixXd H_laser_;
+  Eigen::MatrixXd H_;
   JacobianH Hj_;
   ProcessNoise Q_;
   StateTransition F_;
