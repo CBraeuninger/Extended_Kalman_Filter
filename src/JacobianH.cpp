@@ -1,5 +1,6 @@
 #include "JacobianH.h"
 #include "Eigen/Dense"
+#include <cmath>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -19,7 +20,7 @@ void JacobianH::update(const VectorXd& x_state){
    float vy = x_state(3);
  
    // Calculate rho
-   float rho = sqrt(pow(px,2)+pow(py,2));
+   float rho = std::sqrt(std::pow(px,2)+std::pow(py,2));
 
    if (rho==0)  // check division by zero => throws error
    {
@@ -28,8 +29,8 @@ void JacobianH::update(const VectorXd& x_state){
    else // compute the Jacobian matrix
    {
       matrix_ << px / rho,                        py / rho,                        0,          0,
-            -py / pow(rho,2),                px / pow(rho,2),                 0,          0,
-            py * (vx*py-vy*px) / pow(rho,3), px * (vy*px-vx*py) / pow(rho,3), px / rho,   py / rho;
+            -py / std::pow(rho,2),                px / std::pow(rho,2),                 0,          0,
+            py * (vx*py-vy*px) / std::pow(rho,3), px * (vy*px-vx*py) / std::pow(rho,3), px / rho,   py / rho;
 
    }
 

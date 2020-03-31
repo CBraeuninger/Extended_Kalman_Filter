@@ -37,7 +37,7 @@ FusionEKF::FusionEKF() {
 
   // Lidar measures only the position (px, py) of the object
   H_ << 1, 0, 0, 0,
-              0, 1, 0, 0;
+        0, 1, 0, 0;
 
   // uncertainity of where we are
   P_ << 1000, 0, 0, 0,
