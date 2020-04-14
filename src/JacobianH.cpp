@@ -11,6 +11,10 @@ JacobianH::JacobianH(){
 
 }
 
+JacobianH::~JacobianH(){
+   
+}
+
 void JacobianH::update(const VectorXd& x_state){
 
    // recover state parameters

@@ -3,6 +3,8 @@
 
 #include "Eigen/Dense"
 #include "JacobianH.h"
+#include "StateTransition.h"
+#include "ProcessNoise.h"
 
 class KalmanFilter {
  public:

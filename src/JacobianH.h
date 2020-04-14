@@ -11,11 +11,11 @@ class JacobianH : public MatrixXd{
     public:
 
         JacobianH();
-        ~JacobianH();
+        virtual ~JacobianH();
 
         MatrixXd matrix_;
 
-        void JacobianH::update(const VectorXd& x_state);
+        void update(const VectorXd& x_state);
 
         MatrixXd operator * (MatrixXd other){
             return matrix_  * other;

@@ -41,10 +41,6 @@ class FusionEKF {
   // previous timestamp
   long long previous_timestamp_;
 
-  // process noise parameters
-  int sigma_ax_;
-  int sigma_ay_;
-
   // tool object used to compute Jacobian and RMSE
   Tools tools;
   // Matrices for Kalman filter equations

@@ -11,13 +11,13 @@ class ProcessNoise{
 
         /* Constructor and deconstructor */
         ProcessNoise();
-        ~ProcessNoise();
+        virtual ~ProcessNoise();
 
         int sigma_ax_;
         int sigma_ay_;
         MatrixXd matrix_;
 
-        void ProcessNoise::update(long long deltaT);
+        void update(long long deltaT);
 
         MatrixXd operator * (MatrixXd other){
             return matrix_ * other;

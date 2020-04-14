@@ -11,6 +11,10 @@ StateTransition::StateTransition(){
             0, 0, 0, 1;
 }
 
+StateTransition::~StateTransition(){
+        
+}
+
 void StateTransition::update(long long deltaT){
 
   matrix_ << 1, 0, deltaT, 0,
