@@ -2,7 +2,6 @@
 #include <iostream>
 
 using Eigen::VectorXd;
-using Eigen::MatrixXd;
 using std::vector;
 
 Tools::Tools() {}

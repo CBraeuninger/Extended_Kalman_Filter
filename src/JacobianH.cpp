@@ -7,7 +7,7 @@ using Eigen::VectorXd;
 
 JacobianH::JacobianH(){
 
-   matrix_ = MatrixXd(4,4);
+   matrix_ = MatrixXd(3,4);
 
 }
 
