@@ -1,6 +1,7 @@
 #include "JacobianH.h"
 #include "Eigen/Dense"
 #include <cmath>
+#include <iostream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -39,3 +40,12 @@ void JacobianH::update(const VectorXd& x_state){
    }
 
 }
+
+JacobianH JacobianH::transpose(){
+
+   JacobianH Hj_transposed;
+   Hj_transposed.matrix_ = matrix_.transpose();
+
+   return Hj_transposed;
+}
+

@@ -3,6 +3,8 @@
 #include "StateTransition.h"
 #include "ProcessNoise.h"
 #include "JacobianH.h"
+#include "operator_overriding.cpp"
+
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -33,9 +35,9 @@ void KalmanFilter::Predict(long long deltaT) {
   // update the process noise covariance matrix
   Q_.update(deltaT);
   // Update x (in Cartesian coordinates)
-  x_ = F_ * x_;
+  x_ = multiply(F_, x_) ;
   // Calculate new state covariance matrix
-  P_ = Q_ + F_ * P_ * F_.transpose();
+  P_ = Q_ + multiply(multiply(F_ ,P_),F_.transpose());
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
@@ -56,11 +58,11 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
    */
   // calculate state in polar coordinates
   VectorXd y = z - calculate_h_of_x();
-  MatrixXd S = Hj_ * P_ * Hj_.transpose() + R_radar_;
-  MatrixXd K = P_ * Hj_.transpose() * S.inverse();
+  MatrixXd S = multiply(multiply(Hj_,P_),Hj_.transpose()) + R_radar_;
+  MatrixXd K = multiply(P_, Hj_.transpose()) * S.inverse();
   x_ = x_ + K * y;
   MatrixXd I = MatrixXd::Identity(x_.size(), x_.size());
-  P_ = (I - K * Hj_) * P_;
+  P_ = (I - multiply(K,Hj_))* P_;
 }
 
 VectorXd KalmanFilter::calculate_h_of_x(){

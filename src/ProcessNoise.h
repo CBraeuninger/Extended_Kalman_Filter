@@ -19,13 +19,9 @@ class ProcessNoise{
 
         void update(long long deltaT);
 
-        MatrixXd operator * (MatrixXd other){
-            return matrix_ * other;
-        };
-
         MatrixXd operator + (MatrixXd other){
             return matrix_ + other;
-        };        
+        };     
 
 };
 

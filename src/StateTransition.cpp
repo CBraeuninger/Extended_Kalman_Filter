@@ -1,5 +1,6 @@
 #include "StateTransition.h"
 #include "Eigen/Dense"
+#include <iostream>
 
 using Eigen::MatrixXd;
 
@@ -23,3 +24,12 @@ void StateTransition::update(long long deltaT){
         0, 0, 0, 1;
 
 }
+
+StateTransition StateTransition::transpose(){
+
+   StateTransition st_transposed;
+   st_transposed.matrix_ = matrix_.transpose();
+
+   return st_transposed;
+}
+

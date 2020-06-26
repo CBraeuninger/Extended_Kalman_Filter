@@ -70,6 +70,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
     // calculate Jacobian
     Hj_.update(ekf_.x_);
+
     // initialize Kalman filter
     ekf_.Init(ekf_.x_, P_, F_, H_, Hj_, R_radar_, R_laser_, Q_);      
 

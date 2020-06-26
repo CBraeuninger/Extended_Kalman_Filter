@@ -4,6 +4,7 @@
 #include "Eigen/Dense"
 
 using Eigen::MatrixXd;
+using Eigen::VectorXd;
 
 class StateTransition : public MatrixXd{
     public:
@@ -15,14 +16,11 @@ class StateTransition : public MatrixXd{
 
         void update(long long deltaT);
 
-        MatrixXd operator * (MatrixXd other){
-            return matrix_ * other;
-        };
+        StateTransition transpose();
 
-        MatrixXd transpose (){
-            return matrix_.transpose();
+        MatrixXd operator + (MatrixXd other){
+            return other + matrix_;
         };
-
 };
 
 #endif // STATETRANSITION_H_

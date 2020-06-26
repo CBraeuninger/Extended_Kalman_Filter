@@ -17,9 +17,7 @@ class JacobianH : public MatrixXd{
 
         void update(const VectorXd& x_state);
 
-        MatrixXd operator * (MatrixXd other){
-            return matrix_  * other;
-        };
+        JacobianH transpose();
 
 };
 
