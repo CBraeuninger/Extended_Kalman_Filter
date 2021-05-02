@@ -16,8 +16,6 @@ using std::vector;
 FusionEKF::FusionEKF() {
   is_initialized_ = false;
 
-  previous_timestamp_ = 0;
-
   // initializing matrices
   R_laser_ = MatrixXd(2, 2); //measurement covariance matrix (laser) : describing uncertainity of sensor measurement
   R_radar_ = MatrixXd(3, 3); //measurement covariance matrix (radar): describing uncertainity of sensor measurement
@@ -62,7 +60,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   if (!is_initialized_) {
 
     // Initialize the state ekf_.x_ with the first measurement
-    
+    previous_timestamp_ = measurement_pack.timestamp_;
+
     // first measurement
     cout << "EKF: " << endl;
     ekf_.x_ = VectorXd(4);
@@ -72,36 +71,49 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     Hj_.update(ekf_.x_);
 
     // initialize Kalman filter
-    ekf_.Init(ekf_.x_, P_, F_, H_, Hj_, R_radar_, R_laser_, Q_);      
+    ekf_.Init(measurement_pack, P_, F_, H_, Hj_, R_radar_, R_laser_, Q_);      
 
+    cout << "x_ = " << ekf_.x_ << endl;
+    cout << "P_ = " << P_ << endl;
+    cout << "F_ = " << F_.matrix_ << endl;
+    cout << "H_ " << H_ << endl;
+    cout << "Hj_ = " << Hj_.matrix_ << endl; 
+    cout << "R_radar_ = " << R_radar_ << endl;
+    cout << "R_laser_ = " << R_laser_ << endl;
+    cout << "Q_ = " << Q_.matrix_ << endl;
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
     return;
   }
 
-  /**
-   ***************************** Prediction *********************************
-   */
+  if (is_initialized_){
+    /**
+     ***************************** Prediction *********************************
+    */
 
-  ekf_.Predict(measurement_pack.timestamp_ - previous_timestamp_);
+    cout << "time stamp = " << measurement_pack.timestamp_ << endl;
+    cout << "previous time stamp = " << previous_timestamp_ << endl;
 
-  /**
-   ************************* Measurement Update *****************************
-   */
+    ekf_.Predict(measurement_pack.timestamp_ - previous_timestamp_);
 
-  /**
-   * - Use the sensor type to perform the update step.
-   * - Update the state and covariance matrices.
-   */
+    /**
+     ************************* Measurement Update *****************************
+    */
 
-  if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-    ekf_.UpdateEKF(measurement_pack.raw_measurements_);
-  } else {
-    ekf_.Update(measurement_pack.raw_measurements_);
+    /**
+     * - Use the sensor type to perform the update step.
+     * - Update the state and covariance matrices.
+     */
+
+    if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
+      ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+    } else {
+      ekf_.Update(measurement_pack.raw_measurements_);
+    }
+
+    // print the output
+    cout << "x_ = " << ekf_.x_ << endl;
+    cout << "P_ = " << ekf_.P_ << endl;
   }
-
-  // print the output
-  cout << "x_ = " << ekf_.x_ << endl;
-  cout << "P_ = " << ekf_.P_ << endl;
 }

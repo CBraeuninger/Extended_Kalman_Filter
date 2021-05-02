@@ -4,19 +4,31 @@
 #include "ProcessNoise.h"
 #include "JacobianH.h"
 #include "operator_overriding.cpp"
+#include "MeasurementPackage.h"
 
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+using std::cout;
+using std::endl;
 
 KalmanFilter::KalmanFilter() {}
 
 KalmanFilter::~KalmanFilter() {}
 
-void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, StateTransition &F_in,
+void KalmanFilter::Init(const MeasurementPackage &measurements, MatrixXd &P_in, StateTransition &F_in,
                         MatrixXd &H_in, JacobianH &Hj_in, MatrixXd &R_radar_in,
                         MatrixXd &R_laser_in, ProcessNoise &Q_in) {
-  x_ = x_in;
+  if (measurements.sensor_type_ == MeasurementPackage::RADAR) {
+    // Convert radar from polar to cartesian coordinates 
+    //         and initialize state.
+    x_ << measurements.raw_measurements_[0]*cos(measurements.raw_measurements_[1]), measurements.raw_measurements_[0]*sin(measurements.raw_measurements_[1]), 1, 1;
+  }
+  else if (measurements.sensor_type_ == MeasurementPackage::LASER) {
+    // Initialize state.
+    x_ << measurements.raw_measurements_[0], measurements.raw_measurements_[1], 1, 1;
+  }
+
   P_ = P_in;
   F_ = F_in;
   H_ = H_in;
@@ -32,8 +44,10 @@ void KalmanFilter::Predict(long long deltaT) {
    */
   // update state transition matrix
   F_.update(deltaT);
+  cout << "updated F_= " << F_.matrix_ << endl;
   // update the process noise covariance matrix
   Q_.update(deltaT);
+  cout << "updated Q_ =" << Q_.matrix_ << endl;
   // Update x (in Cartesian coordinates)
   x_ = multiply(F_, x_) ;
   // Calculate new state covariance matrix

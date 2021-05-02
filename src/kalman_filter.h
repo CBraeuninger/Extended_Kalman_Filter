@@ -5,6 +5,7 @@
 #include "JacobianH.h"
 #include "StateTransition.h"
 #include "ProcessNoise.h"
+#include "MeasurementPackage.h"
 
 class KalmanFilter {
  public:
@@ -28,7 +29,7 @@ class KalmanFilter {
    * @param R_in Measurement covariance matrix
    * @param Q_in Process covariance matrix
    */
-  void Init(Eigen::VectorXd &x_in, Eigen::MatrixXd &P_in, StateTransition &F_in,
+  void Init(const MeasurementPackage &measurements, Eigen::MatrixXd &P_in, StateTransition &F_in,
             Eigen::MatrixXd &H_in, JacobianH &Hj_in, Eigen::MatrixXd &R_radar_in,
             Eigen::MatrixXd &R_laser_in, ProcessNoise &Q_in);
 
