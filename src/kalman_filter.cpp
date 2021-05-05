@@ -38,7 +38,7 @@ void KalmanFilter::Init(const MeasurementPackage &measurements, MatrixXd &P_in, 
   Q_ = Q_in;
 }
 
-void KalmanFilter::Predict(long long deltaT) {
+void KalmanFilter::Predict(double deltaT) {
   /**
    * predict the state
    */

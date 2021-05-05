@@ -14,7 +14,7 @@ class StateTransition : public MatrixXd{
 
         MatrixXd matrix_; // state transition matrix
 
-        void update(long long deltaT);
+        void update(double deltaT);
 
         StateTransition transpose();
 

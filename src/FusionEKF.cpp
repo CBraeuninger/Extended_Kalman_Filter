@@ -60,7 +60,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   if (!is_initialized_) {
 
     // Initialize the state ekf_.x_ with the first measurement
-    previous_timestamp_ = measurement_pack.timestamp_;
+    previous_timestamp_ = (double) (measurement_pack.timestamp_/1000000);
 
     // first measurement
     cout << "EKF: " << endl;
@@ -91,11 +91,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     /**
      ***************************** Prediction *********************************
     */
+    double time_stamp_ =(double) (measurement_pack.timestamp_/1000000);
+    double delta_t = (double) (time_stamp_ - previous_timestamp_);
+    cout << "time stamp = " << time_stamp_ << endl;
+    cout << "previous time stamp = " << previous_timestamp_<< endl;
+    cout << "delta t = " << delta_t << endl;
 
-    cout << "time stamp = " << measurement_pack.timestamp_ << endl;
-    cout << "previous time stamp = " << previous_timestamp_ << endl;
-
-    ekf_.Predict(measurement_pack.timestamp_ - previous_timestamp_);
+    ekf_.Predict(delta_t);
 
     /**
      ************************* Measurement Update *****************************

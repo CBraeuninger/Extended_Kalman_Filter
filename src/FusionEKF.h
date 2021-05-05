@@ -39,7 +39,7 @@ class FusionEKF {
   bool is_initialized_;
 
   // previous timestamp
-  long long previous_timestamp_;
+  float previous_timestamp_;
 
   // tool object used to compute Jacobian and RMSE
   Tools tools;

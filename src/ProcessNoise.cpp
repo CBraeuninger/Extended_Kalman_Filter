@@ -19,7 +19,7 @@ ProcessNoise::ProcessNoise(){
 ProcessNoise::~ProcessNoise(){
 }
 
-void ProcessNoise::update(long long deltaT){
+void ProcessNoise::update(double deltaT){
       matrix_ << 0.25 * pow(sigma_ax_, 2) * pow(deltaT, 4), 0, 0.5 * pow(sigma_ax_, 2) * pow(deltaT, 3), 0,
         0, 0.25 * pow(sigma_ay_, 2) * pow(deltaT, 2), 0, 0.5 * pow(sigma_ay_, 2) * pow(deltaT, 3),
         0.5 * pow(sigma_ax_, 2) * pow(deltaT,3), 0, pow(sigma_ax_, 2) * pow(deltaT, 2), 0,

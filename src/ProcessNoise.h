@@ -17,7 +17,7 @@ class ProcessNoise{
         int sigma_ay_;
         MatrixXd matrix_;
 
-        void update(long long deltaT);
+        void update(double deltaT);
 
         MatrixXd operator + (MatrixXd other){
             return matrix_ + other;

@@ -16,7 +16,7 @@ StateTransition::~StateTransition(){
         
 }
 
-void StateTransition::update(long long deltaT){
+void StateTransition::update(double deltaT){
 
   matrix_ << 1, 0, deltaT, 0,
         0, 1, 0, deltaT,
